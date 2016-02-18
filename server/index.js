@@ -4,6 +4,8 @@ var sass = require('node-sass-endpoint');
 var session = require('cookie-session');
 var MP = require('node-makerpass');
 
+var db  = require('./db');
+
 var morgan  = require('morgan');
 var Promise = require('bluebird');
 
@@ -72,6 +74,9 @@ routes.get('/auth/makerpass', //what is this?
 // of which passport will mostly handle.
 //
 //////////////////////////This is calling the failureRedirect, i added /# to the failureRedirect
+
+///// KK: added the session: false after seeing this stackoverflow answer: http://stackoverflow.com/questions/19948816/error-failed-to-serialize-user-into-session
+  // also remembered the Makerpass Readme that said to not use passport.session(); however, it did say to possibly use a separate session library, so we might need to look into that, but for now, it definitely seems like it's working. Tried adding different pages to the sucessRedirect, and it worked. 
 routes.get('/auth/makerpass/callback',
   passport.authenticate('makerpass', { failureRedirect: '/#/login',
   failFlash: true }),
