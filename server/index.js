@@ -4,9 +4,18 @@ var sass = require('node-sass-endpoint');
 var session = require('cookie-session');
 var MP = require('node-makerpass');
 
+var db  = require('./db');
+
 var morgan  = require('morgan');
 var Promise = require('bluebird');
 
+// need to require knex to use the functions for DB
+var knex = require('knex')({
+  client: 'pg',
+  connection: {
+    database: 'stack'
+  }
+});
 
 var routes = express.Router();
 routes.use(morgan('dev'));
@@ -71,25 +80,51 @@ routes.get('/auth/makerpass', //what is this?
 // During the OAuth dance, MakerPass will redirect your user to this route,
 // of which passport will mostly handle.
 //
-//////////////////////////This is calling the failureRedirect, i added /# to the failureRedirect
 routes.get('/auth/makerpass/callback',
   passport.authenticate('makerpass', { failureRedirect: '/#/login',
   failFlash: true }),
   function(req, res) {
     console.log("WORKING")
     // Successful authentication, do what you like at this point :)
-    //routes.use(express.static(assetFolder));
+    routes.use(express.static(assetFolder));
     res.redirect('/#/');
   });
 
 //route to your index.html
 var assetFolder = Path.resolve(__dirname, '../client/');
-  //routes.use(express.static(assetFolder));
+  routes.use(express.static(assetFolder));
 
 
-// Example endpoint (also tested in test/server/index_test.js)
+// Route endpoints to listen for frontend requests
 routes.get('/api/tags-example', function(req, res) {
   res.send(['node', 'express', 'angular'])
+});
+
+routes.get('/api/questions/*', function(req, res) {
+  console.log('Where are we?', req);
+});
+
+// Listen for post question req, send question information to the database, redirect to that question page
+routes.post('/api/questions', function(req, res) {
+  console.log("In post in index.js", req.body.title);
+  knex('questions').insert({questiontitle: req.body.title, questiontext: req.body.text})
+  .then(function(resp) {
+    // query db to get questionid of the question we just asked
+    knex('questions').where({questiontext: req.body.text}).select('questionid')
+    // async, returns object within array
+    .then(function(id) { var quest = id[0].questionid; return quest; })
+    .then(function(questid) {
+      console.log("we are getting questid ", questid);
+      // routes.get('/api/questions/' + questid, function(req, res) {
+      //   console.log('we are in questionid getting');
+      res.send({questid: questid});
+      // })
+    })
+    .catch(function(err) {
+      console.log(err);
+    })
+  })
+
 });
 
 if (process.env.NODE_ENV !== 'test') {
