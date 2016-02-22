@@ -2,38 +2,72 @@
 //this is being called by the login button on the login page
 //this calls the factory function Login.verify below 
 //then sets the result in localStorage
-angular.module('myApp.login', [])
-  .controller('LoginCtrl', function ($scope, $window, Login) {
-    $scope.authoreyes = function() {
-    	Login.verify()
-    	.then(function(res) {
-    		console.log('authoreyes res', res)
-    		$window.localStorage.setItem('session', res)
-    		$location.path('home')
-    	}).catch(function(err) {
-    		console.log("Error:", err)
-    		$location.path('login');
-    	})
-    }
+angular.module('myApp.auth', [])
+  .controller('AuthController', function ($scope, $window, $state, Auth) {
+    $scope.signin = function () {
+      Auth.signin($scope.user)
+        .then(function (token) {
+          $window.localStorage.setItem('com.underflow', token);
+          $state.go('home');
+        })
+        .catch(function(error) {
+          console.log('Something went wrong', error);
+          $state.reload();
+        })
+    };
+
+    $scope.signup = function() {
+      Auth.signup($scope.user)
+        .then(function (token) {
+          $window.localStorage.setItem('com.underflow', token);
+          $state.go('home');
+        })
+        .catch(function(error) {
+          console.log('Something went wrong', error);
+        });
+    };
   })
 
-//This creates a get request to the server... Eventually the Url will
-//be /api/login which will fetch the user information from the database
-  .factory('Login', function($http, $location, $window) {
-    var verify = function (user) {
+  .factory('Auth', function ($http, $location, $window) {
+    var signin = function (user) {
       return $http({
-      method: 'Get',
-      url: '/auth/makerpass'
+        method: 'POST',
+        url: '/api/users/signin',
+        data: user
       })
       .then(function(resp) {
-          console.log("response of controller:", res)
-      return res
+        if (resp.data.error) {
+          alert(resp.data.error);
+          throw new Error(resp.data.error);
+        }
+        return resp.data.token;
+      });
+    };
+
+    var signup = function(user) {
+      return $http({
+        method: 'POST',
+        url: '/api/users/signup',
+        data: user
       })
-    }
+      .then (function (resp) {
+        return resp.data.token;
+      });
+    };
+
+    var isAuth = function () {
+      return !!$window.localStorage.getItem('com.underflow');
+    };
+
+    var signout = function() {
+      $window.localStorage.removeItem('com.underflow');
+      $state.go('login');
+    };
 
     return {
-        verify: verify
-    }
-})
-
-
+      signin: signin,
+      signup: signup,
+      isAuth: isAuth,
+      signout: signout
+    };
+  })

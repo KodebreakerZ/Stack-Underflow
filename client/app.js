@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('myApp', [
-    'myApp.login',
+    'myApp.auth',
     'ui.router',
     'ngCookies',
     'infinite-scroll',
@@ -16,7 +16,13 @@ angular.module('myApp', [
         .state('login', {
             url: '/login',
             templateUrl: 'views/login.html',
-            controller: 'LoginCtrl'
+            controller: 'AuthController'
+        })
+
+        .state('signup', {
+          url: '/signup',
+          templateUrl: 'views/signup.html',
+          controller: 'AuthController'
         })
 
         .state('home', {
@@ -52,49 +58,26 @@ angular.module('myApp', [
         $httpProvider.interceptors.push('Authenticate');
 
 })
-.factory('Authenticate', function ($cookies) {
-//cookies won't work because a httpOnly flag whcih prevents XSS
-//this factory will eventually authenticate the user with the stored token
-  // var verify = function (user) {
-  //   return $http({
-  //   method: 'Get',
-  //   url: '/auth/makerpass',
-  //   })
-  //   .then(function(res) {
-  //     console.log("response of controller:", res)
-  //   return res
-  //   })
-  // }
-  return {
-        request: function (config) {
-          console.log("config", config)
-            return config //|| $q.when(config)
-        },
-        response: function (response) {
-          console.log('response', response)
-            return response //|| $q.when(response);
-        },
-        responseError: function (response) {
-          console.log('response...', response)
-            if (response.status === 401) {
-                //here I preserve login page 
-            }
-           // return $q.reject(response);
-        }
-    };
+.factory('Authenticate', function ($window) {
+  var attach = {
+    request: function(object) {
+      var jwt = $window.localStorage.getItem('com.underflow');
+      if (jwt) {
+        object.headers['x-access-token'] = jwt;
+      }
+      object.headers['Allow-Control-Allow-Origin'] = '*';
+      return object;
+    }
+  };
+  return attach;
 })
-.run(function ($rootScope, $state, $window, amMoment) {
-  // amMoment.changeLocale('de');
-
+.run(function ($rootScope, $state, Auth) {
   // Everything is running, listening for change state and if the next state requires authentication.
 $rootScope.$on("$stateChangeStart", function(event, toState, toParams, fromState, fromParams){
-  //this works but needs to check if the user is authenitcated along with if the next route
-  //requires authentication.
-      // if (toState.authenticate){
-      //   // User isn’t authenticated, redirect to makerpass
-      //   $state.transitionTo("login");
-      //   event.preventDefault(); 
-      // }
-    });
+  if (toState.authenticate && Auth.isAuth() === false) {
+    $state.transitionTo("login");
+    event.preventDefault();
+    };
+  })
 });
 
