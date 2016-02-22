@@ -4,7 +4,8 @@ angular.module('myApp', [
     'myApp.auth',
     'ui.router',
     'ngCookies',
-    'infinite-scroll'
+    'infinite-scroll',
+    'angularMoment'
   ])
 
     .config(function($stateProvider, $urlRouterProvider, $httpProvider) {
@@ -43,7 +44,6 @@ angular.module('myApp', [
              templateUrl: 'views/question.html',
              controller: 'QuestionCtrl',
              authenticate: true,
-             params: {questionID: ''}
         })
 
         .state('logout', {
