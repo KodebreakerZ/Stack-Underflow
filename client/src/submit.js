@@ -15,11 +15,11 @@ angular.module('myApp')
         var currentDate = new Date(timestamp);
         // Take data from form, convert to object, send with post req to db
         var data = {title: title, text: text, time: currentDate};
-        $http.post("/api/questions", data)
+        $http.post("/api/data/questions", data)
         .success(function(resp, status) {
-            console.log("Cookie should not have changed, have to use resp", resp.questid);
+            // console.log("Cookie should not have changed, have to use resp", resp.questid);
             // Cookies act weird on routes, set params instead => Send questid along with get request to DB to get question just asked
-            $http.get('/api/questions/' + resp.questid)
+            $http.get('/api/data/questions/' + resp.questid)
             .success(function(resp, status) {
                 // Set cookies to questionid for data persist
                 $cookieStore.put('qid', resp.singleQuestion[0].questionid);
