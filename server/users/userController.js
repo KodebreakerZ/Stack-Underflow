@@ -17,8 +17,9 @@ module.exports = {
 			if (data[0] === undefined) {
 				res.send({error: 'Username or password is invalid.'})
 			} else {
+				console.log("SHouldn't this have infom???", data);
 				var token = jwt.encode(username, 'secret');
-				res.send({token: token});
+				res.send({token: token, uid: data[0].userid});
 			}
 		})
 	},

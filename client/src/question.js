@@ -20,13 +20,14 @@ angular.module('myApp')
     //These will each be formatted based on directives/answer.js
 
     /////// Submit answers to DB (submitAnswer.js)
-    $scope.submitAnswer = function(text) {
+    $scope.submitAnswer = function(text, user) {
       /* Possibly change $scope.userInput to clear form, depending on Tim's toolbar */
       $scope.userInput = ' ';
       // Get questionid from cookie
       var cookieid = $cookieStore.get('qid');
+      var userid = $cookieStore.get('uid');
       // Send answer text and id to service: /src/services/submitAnswer.js
-      SubmitAnswer.submitA(text, cookieid)
+      SubmitAnswer.submitA(text, cookieid, userid)
       .then(function(data) {
         // Get answers from DB again
         return GetAnswers.getAnswersByQuestion(cookieid);
@@ -49,6 +50,8 @@ angular.module('myApp')
       })
       // Next, query DB for associated answers, pass question along to service to get id out: /src/services/getAnswers.js
       .then(function(data) {
+        // console.log("What is this data???", data);
+        // return 
         return GetAnswers.getAnswersByQuestion(data.questionid);
       })
       .then(function(response) {

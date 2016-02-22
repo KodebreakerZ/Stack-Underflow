@@ -3,7 +3,7 @@
 //this calls the factory function Login.verify below 
 //then sets the result in localStorage
 angular.module('myApp.auth', [])
-  .controller('AuthController', function ($scope, $window, $state, Auth) {
+  .controller('AuthController', function ($scope, $window, $state, $cookieStore, Auth) {
     $scope.signin = function () {
       Auth.signin($scope.user)
         .then(function (token) {
@@ -28,7 +28,7 @@ angular.module('myApp.auth', [])
     };
   })
 
-  .factory('Auth', function ($http, $location, $window) {
+  .factory('Auth', function ($http, $location, $window, $cookieStore) {
     var signin = function (user) {
       return $http({
         method: 'POST',
@@ -40,6 +40,8 @@ angular.module('myApp.auth', [])
           alert(resp.data.error);
           throw new Error(resp.data.error);
         }
+        console.log("Is this my person???", resp);
+        $cookieStore.put('uid', resp.data.uid);
         return resp.data.token;
       });
     };

@@ -104,27 +104,33 @@ var assetFolder = Path.resolve(__dirname, '../client/');
 routes.get('/api/questions', function(req, res) {
   console.log("Getting all questions");
   // Order in reverse (newest first)
-  knex('questions').select().orderBy('questiondate', 'desc')
-  .then(function(questions) {
-    // Pass data back to controller /src/main.js
-    res.send({questions: questions});
-  })
-  .catch(function(err) {
-    console.log("Something went wrong", err);
+  knex.from('questions').innerJoin('users', 'questions.fk_askedbyuserid', 'users.userid').orderBy('questiondate', 'desc')
+  // Pass data back to controller /src/main.js
+  .then(function(data) {
+    res.send({questions: data})
   })
 });
 
 // Get single question from DB
 routes.get('/api/questions/*', function(req, res) {
   console.log("Let's take a closer look at question ", req.params[0]);
-  knex('questions').where({questionid: req.params[0]})
-  .then(function(singleQuest) {
-    // Send back question data to controller /src/question.js
-    res.send({singleQuestion: singleQuest});
+
+  knex.select('*').from('users').innerJoin('questions', 'questions.fk_askedbyuserid', 'users.userid').where({questionid: req.params[0]})
+  // Then, query answers table on condition the questionid in answer matches parameter, and the subquery
+  // knex('questions').where({questionid: req.params[0]}, subquery)
+  .then(function(data) {
+    // console.log("Is this what I want??", data);
+    res.send({singleQuestion: data})
   })
-  .catch(function(err) {
-    console.log("Something went wrong", err);
-  })
+
+  // knex('questions').where({questionid: req.params[0]})
+  // .then(function(singleQuest) {
+  //   // Send back question data to controller /src/question.js
+  //   res.send({singleQuestion: singleQuest});
+  // })
+  // .catch(function(err) {
+  //   console.log("Something went wrong", err);
+  // })
 });
 
 // Post a question into DB
@@ -132,7 +138,7 @@ routes.post('/api/questions', function(req, res) {
   // Get data from req body
   console.log("You are asking a question. Good for you.");
   // Insert that data into DB
-  knex('questions').insert({questiontitle: req.body.title, questiontext: req.body.text, questiondate: req.body.time})
+  knex('questions').insert({questiontitle: req.body.title, questiontext: req.body.text, questiondate: req.body.time, fk_askedbyuserid: req.body.fkaskedby})
     // query db to get questionid of the question we just asked with date
   .then(function(resp) {
     knex('questions').where({questiondate: req.body.time}).select('questionid')
@@ -149,7 +155,7 @@ routes.post('/api/questions', function(req, res) {
 // Post an answer into DB
 routes.post('/api/answer', function(req, res) {
   console.log("You are developing others. Way to go!");
-  knex('answers').insert({answertext: req.body.text, fk_questionid: req.body.id, answerdate: req.body.time})
+  knex('answers').insert({answertext: req.body.text, fk_questionid: req.body.id, answerdate: req.body.time, fk_answeredbyuserid: req.body.fkansweredby})
   .then(function(resp) {
     // After query to DB, end response to fufill promise
     console.log("Should insert answer");
@@ -161,10 +167,11 @@ routes.post('/api/answer', function(req, res) {
 routes.get('/api/getAnswers/*', function(req, res) {
   // Query DB for answers
   console.log("Getting answers to increase your knowledge");
+  knex.select('*').from('users').innerJoin('answers', 'answers.fk_answeredbyuserid', 'users.userid').where({fk_questionid: req.params[0]})
   // First do a left outer join to get answers/users that match on userid
-  var subquery = knex.select('*').from('answers').leftOuterJoin('users', 'answers.fk_answeredbyuserid', 'users.userid');
+  // var subquery = knex.select('*').from('answers').leftOuterJoin('users', 'answers.fk_answeredbyuserid', 'users.userid');
   // Then, query answers table on condition the questionid in answer matches parameter, and the subquery
-  knex('answers').where({fk_questionid: req.params[0]}, subquery)
+  // knex('answers').where({fk_questionid: req.params[0]}, subquery)
   .then(function(data) {
     // Send data back to controller: /src/services/question.js
     res.send(data);
