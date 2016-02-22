@@ -53,6 +53,8 @@ angular.module('myApp.auth', [])
         data: user
       })
       .then (function (resp) {
+        console.log("What is this??!?!?!", resp);
+        $cookieStore.put('uid', resp.data.uid);
         return resp.data.token;
       });
     };

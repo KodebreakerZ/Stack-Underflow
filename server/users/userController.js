@@ -17,7 +17,6 @@ module.exports = {
 			if (data[0] === undefined) {
 				res.send({error: 'Username or password is invalid.'})
 			} else {
-				console.log("SHouldn't this have infom???", data);
 				var token = jwt.encode(username, 'secret');
 				res.send({token: token, uid: data[0].userid});
 			}
@@ -36,7 +35,7 @@ module.exports = {
 					return knex('users').where({username: req.body.username})
 					.then(function(user) {
 						var token = jwt.encode(username, 'secret');
-						res.send({token: token});
+						res.send({token: token, uid: user[0].userid});
 					})
 					.catch(function(error) {
 						console.log("Something went wrong", error);

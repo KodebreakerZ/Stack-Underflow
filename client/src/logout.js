@@ -1,7 +1,9 @@
 'use strict';
 //depending on makerpass format, this page may not be needed
 angular.module('myApp')
-  .controller('LogoutCtrl', ['$scope', '$window', '$state', function($scope, $window, $state, LogoutCtrl) {
+  .controller('LogoutCtrl', ['$scope', '$window', '$state', '$cookieStore', function($scope, $window, $state, $cookieStore, LogoutCtrl) {
   	$window.localStorage.removeItem('com.underflow');
+  	$cookieStore.remove('qid');
+  	$cookieStore.remove('uid');
   	$state.go('login');
   }]);
