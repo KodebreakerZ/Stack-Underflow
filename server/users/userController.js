@@ -21,7 +21,7 @@ module.exports = {
       } else {
         var token = jwt.encode(username, 'secret');
           // console.log("TOKEN", token, "user:", user)
-          res.send({token: token});
+          res.send({token: token, uid: data[0].userid});
       }
     })
   },
@@ -49,7 +49,7 @@ module.exports = {
           .then(function (user) {
           // create token to send back for auth
           var token = jwt.encode(username, 'secret');
-          res.send({token: token});
+          res.send({token: token, uid: user[0].userid});
         })
         .catch(function (error) {
           console.log(error);
@@ -84,3 +84,4 @@ module.exports = {
   //   // }
   // }
 };
+

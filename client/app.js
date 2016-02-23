@@ -5,7 +5,8 @@ angular.module('myApp', [
     'ui.router',
     'ngCookies',
     'infinite-scroll',
-    'angularMoment'
+    'angularMoment',
+    'textAngular'
   ])
 
     .config(function($stateProvider, $urlRouterProvider, $httpProvider) {
@@ -20,9 +21,9 @@ angular.module('myApp', [
         })
 
         .state('signup', {
-            url: '/signup',
-            templateUrl: 'views/signup.html',
-            controller: 'AuthController'
+          url: '/signup',
+          templateUrl: 'views/signup.html',
+          controller: 'AuthController'
         })
 
         .state('home', {
@@ -76,6 +77,7 @@ angular.module('myApp', [
   return attach;
 })
 .run(function ($rootScope, $state, Auth) {
+  // Everything is running, listening for change state and if the next state requires authentication.
   // here inside the run phase of angular, our services and controllers
   // have just been registered and our app is ready
   // however, we want to make sure the user is authorized
@@ -92,6 +94,5 @@ angular.module('myApp', [
         event.preventDefault(); 
       }
     });
-
 });
 

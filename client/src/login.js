@@ -3,7 +3,7 @@
 //this calls the factory function Login.verify below 
 //then sets the result in localStorage
 angular.module('myApp.auth', [])
-  .controller('AuthController', function ($scope, $window, $state, Auth) {
+  .controller('AuthController', function ($scope, $window, $state, $cookieStore, Auth) {
     $scope.signin = function () {
     Auth.signin($scope.user)
       .then(function (token) {
@@ -31,7 +31,7 @@ angular.module('myApp.auth', [])
 })
 //This authenticates the user by exchanging the user's username and password
 //for a JWT from the server.
-  .factory('Auth', function ($http, $location, $window) {
+  .factory('Auth', function ($http, $location, $window, $cookieStore) {
       var signin = function (user) {
     return $http({
       method: 'POST',
@@ -43,6 +43,7 @@ angular.module('myApp.auth', [])
         alert(resp.data.error)
         throw new Error(resp.data.error)
       }
+      $cookieStore.put('uid', resp.data.uid);
       return resp.data.token;
     });
   };
@@ -54,6 +55,8 @@ angular.module('myApp.auth', [])
       data: user
     })
     .then(function (resp) {
+      console.log("WHYHWERJA:S", resp);
+      // $cookieStore.put('uid', resp.data.uid);
       return resp.data.token;
     });
   };
@@ -76,4 +79,15 @@ angular.module('myApp.auth', [])
   };
 })
 
+  //   var signout = function() {
+  //     $window.localStorage.removeItem('com.underflow');
+  //     $state.go('login');
+  //   };
 
+  //   return {
+  //     signin: signin,
+  //     signup: signup,
+  //     isAuth: isAuth,
+  //     signout: signout
+  //   };
+  // })
