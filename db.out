@@ -53,8 +53,8 @@ SET default_transaction_read_only = off;
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.0
--- Dumped by pg_dump version 9.5.0
+-- Dumped from database version 9.5.1
+-- Dumped by pg_dump version 9.5.1
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -100,8 +100,8 @@ SET default_transaction_read_only = off;
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.0
--- Dumped by pg_dump version 9.5.0
+-- Dumped from database version 9.5.1
+-- Dumped by pg_dump version 9.5.1
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -154,8 +154,8 @@ SET default_transaction_read_only = off;
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.0
--- Dumped by pg_dump version 9.5.0
+-- Dumped from database version 9.5.1
+-- Dumped by pg_dump version 9.5.1
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -225,7 +225,7 @@ ALTER SEQUENCE answerrating_ratingid_seq OWNED BY answerrating.ratingid;
 
 CREATE TABLE answers (
     answerid integer NOT NULL,
-    answertext character varying(255),
+    answertext text,
     fk_questionid integer,
     fk_answeredbyuserid integer,
     answerdate timestamp with time zone
@@ -347,7 +347,7 @@ CREATE TABLE users (
     makerpassuuid character varying(255),
     avatar_url character varying(75),
     useremail character varying(100),
-    password character varying(50) NOT NULL
+    password character varying(20)
 );
 
 
@@ -429,6 +429,24 @@ SELECT pg_catalog.setval('answerrating_ratingid_seq', 1, false);
 --
 
 COPY answers (answerid, answertext, fk_questionid, fk_answeredbyuserid, answerdate) FROM stdin;
+69  Gilbert.    118 41  2016-02-22 14:43:14.733-06
+70  You can't.  118 42  2016-02-22 14:43:51.703-06
+71  Life hates you. 117 43  2016-02-22 14:46:20.117-06
+72  Nope.   119 42  2016-02-22 14:46:38.885-06
+73  What are the weird symbols next to it?  128 42  2016-02-22 14:49:54.798-06
+74  You can't. Sorry.   127 40  2016-02-22 15:05:08.436-06
+75  Google. 131 40  2016-02-22 15:07:38.344-06
+108 answerrrr   133 40  2016-02-22 15:35:33.523-06
+109     133 40  2016-02-22 15:43:14.361-06
+110 {"$error":{},"$name":"userInput","$dirty":true,"$pristine":false,"$valid":true,"$invalid":false,"$submitted":false,"qTitle":{"$viewValue":"<p>attempt</p>","$modelValue":"<p>attempt</p>","$validators":{},"$asyncValidators":{},"$parsers":[],"$formatters":[],"$viewChangeListeners":[],"$untouched":false,"$touched":true,"$pristine":false,"$dirty":true,"$valid":true,"$invalid":false,"$error":{},"$name":"qTitle","$options":null}}  133 40  2016-02-22 15:45:59.501-06
+111 {"$error":{},"$name":"userInput","$dirty":true,"$pristine":false,"$valid":true,"$invalid":false,"$submitted":false,"qTitle":{"$viewValue":"<p>hi</p>","$modelValue":"<p>hi</p>","$validators":{},"$asyncValidators":{},"$parsers":[],"$formatters":[],"$viewChangeListeners":[],"$untouched":false,"$touched":true,"$pristine":false,"$dirty":true,"$valid":true,"$invalid":false,"$error":{},"$name":"qTitle","$options":null}}    133 40  2016-02-22 15:59:29.637-06
+112 {"$error":{},"$name":"userInput","$dirty":true,"$pristine":false,"$valid":true,"$invalid":false,"$submitted":false,"qTitle":{"$viewValue":"<p>ok</p>","$modelValue":"<p>ok</p>","$validators":{},"$asyncValidators":{},"$parsers":[],"$formatters":[],"$viewChangeListeners":[],"$untouched":false,"$touched":true,"$pristine":false,"$dirty":true,"$valid":true,"$invalid":false,"$error":{},"$name":"qTitle","$options":null}}    133 40  2016-02-22 16:00:43.178-06
+113 {"$error":{},"$name":"userInput","$dirty":true,"$pristine":false,"$valid":true,"$invalid":false,"$submitted":false,"qTitle":{"$viewValue":"<p>ok</p>","$modelValue":"<p>ok</p>","$validators":{},"$asyncValidators":{},"$parsers":[],"$formatters":[],"$viewChangeListeners":[],"$untouched":false,"$touched":true,"$pristine":false,"$dirty":true,"$valid":true,"$invalid":false,"$error":{},"$name":"qTitle","$options":null}}    133 40  2016-02-22 16:03:17.368-06
+114 {"$error":{},"$name":"userInput","$dirty":true,"$pristine":false,"$valid":true,"$invalid":false,"$submitted":false,"qTitle":{"$viewValue":"<p>ok</p>","$modelValue":"<p>ok</p>","$validators":{},"$asyncValidators":{},"$parsers":[],"$formatters":[],"$viewChangeListeners":[],"$untouched":false,"$touched":true,"$pristine":false,"$dirty":true,"$valid":true,"$invalid":false,"$error":{},"$name":"qTitle","$options":null}}    133 40  2016-02-22 16:04:38.958-06
+115 <p>trying</p>   133 40  2016-02-22 16:05:54.561-06
+116 <p>hi<i><span>hi</span></i></p> 133 40  2016-02-22 16:13:26.952-06
+117 <p>sup</p>  141 40  2016-02-22 16:41:45.709-06
+118 <p>hey ye</p>   141 40  2016-02-22 16:48:24.091-06
 \.
 
 
@@ -436,7 +454,7 @@ COPY answers (answerid, answertext, fk_questionid, fk_answeredbyuserid, answerda
 -- Name: answers_answerid_seq; Type: SEQUENCE SET; Schema: public; Owner: kimberlykost
 --
 
-SELECT pg_catalog.setval('answers_answerid_seq', 6, true);
+SELECT pg_catalog.setval('answers_answerid_seq', 118, true);
 
 
 --
@@ -444,7 +462,7 @@ SELECT pg_catalog.setval('answers_answerid_seq', 6, true);
 --
 
 COPY knex_migrations (id, name, batch, migration_time) FROM stdin;
-1	20160219123025_stackdb.js	1	2016-02-19 12:44:02.058-06
+1   20160219123025_stackdb.js   1   2016-02-19 12:44:02.058-06
 \.
 
 
@@ -469,7 +487,34 @@ COPY knex_migrations_lock (is_locked) FROM stdin;
 --
 
 COPY questions (questionid, questiontitle, questiontext, fk_askedbyuserid, questiondate) FROM stdin;
-55	How does a function work?	Que es function?	\N	\N
+117 WHY?!   This is an example question...  40  2016-02-22 14:42:03.866-06
+118 How do I code good? Please? 40  2016-02-22 14:42:15.246-06
+119 How do I Postgres?  How do you use with GitHub? What about merge conflicts? How do I even being to even?    41  2016-02-22 14:42:57.259-06
+120 How do I toolbar?   ... yeah ...    42  2016-02-22 14:43:42.079-06
+121 How can I tell if it's racist?  Ask the group.\nAt your own risk.   41  2016-02-22 14:44:21.015-06
+122 How does Makerpass work?    Why couldn't we figure it out? :(   41  2016-02-22 14:44:47.502-06
+123 Git Flags   What is the difference between all the different git flags? -a, . , etc.    43  2016-02-22 14:45:34.113-06
+124 nQueens How many boards can YOUR computer solve?    43  2016-02-22 14:46:12.479-06
+125 Angular difficulty  Why are things so hard to use with Angular?!    42  2016-02-22 14:46:57.241-06
+126 Knex    How can I make complicated queries to the database through Knex?    42  2016-02-22 14:47:28.904-06
+127 Gilbert Mastery How do I get to be a wizard like Gilbert?   41  2016-02-22 14:48:09.817-06
+128 What is an HTML tag?    How do I use this thing called an html tag? 42  2016-02-22 14:49:13.138-06
+129 Twittler    How do I twittler so gud?   42  2016-02-22 14:49:22.447-06
+130 Frameworks  Which is the best framework to use with a single-page app?  41  2016-02-22 14:51:04.538-06
+131 How to React    What is the best resource to look at when starting at with React?   41  2016-02-22 14:51:21.005-06
+132 why is this not working please please work  40  2016-02-22 15:31:30.438-06
+133 isthis still working    come on 40  2016-02-22 15:32:51.724-06
+134 What is going on here?  <p>i dunno</p>  \N  2016-02-22 15:47:15.659-06
+135 hi  <p>sup</p>  \N  2016-02-22 15:48:23.822-06
+136 what    <p>up</p>   \N  2016-02-22 15:49:24.892-06
+137 test    <p>again</p>    \N  2016-02-22 15:50:46.585-06
+138 hello again <p>this is the worst</p>    \N  2016-02-22 16:14:28.052-06
+139 hello again <p>this is the worst</p>    \N  2016-02-22 16:24:04.603-06
+140 testingagin <p>uid should still be 40</p>   40  2016-02-22 16:32:28.821-06
+141 test    <p>please work</p>  40  2016-02-22 16:35:20.691-06
+142 sup <p>ask</p>  40  2016-02-22 16:49:07.296-06
+143 test 2  <p>yay</p>  40  2016-02-22 16:50:20.222-06
+144 test3   <p>why</p>  40  2016-02-22 16:58:19.231-06
 \.
 
 
@@ -477,7 +522,7 @@ COPY questions (questionid, questiontitle, questiontext, fk_askedbyuserid, quest
 -- Name: questions_questionid_seq; Type: SEQUENCE SET; Schema: public; Owner: kimberlykost
 --
 
-SELECT pg_catalog.setval('questions_questionid_seq', 55, true);
+SELECT pg_catalog.setval('questions_questionid_seq', 144, true);
 
 
 --
@@ -485,23 +530,10 @@ SELECT pg_catalog.setval('questions_questionid_seq', 55, true);
 --
 
 COPY users (userid, username, makerpassuuid, avatar_url, useremail, password) FROM stdin;
-8	andreas	\N	\N	\N	amem
-9	andreas1	\N	\N	\N	amem
-10	2	\N	\N	\N	amem
-11	4	\N	\N	\N	amem
-12	41	\N	\N	\N	asd
-13	1	\N	\N	\N	asd
-14	11	\N	\N	\N	asd
-15	111	\N	\N	\N	asd
-16	1112	\N	\N	\N	asd
-17	111111	\N	\N	\N	asd
-18	1111119	\N	\N	\N	asd
-19	dsaf	\N	\N	\N	kj;
-20	dsaf2	\N	\N	\N	kj;
-21	dsaf22	\N	\N	\N	kj;
-22	1231	\N	\N	\N	1341
-23	q1324	\N	\N	\N	1341
-24	andrew	\N	\N	\N	moon
+40  Kimberly    \N  \N  \N  pass
+41  Andrew  \N  \N  \N  pass
+42  Tim \N  \N  \N  pass
+43  Marta   \N  \N  \N  pass
 \.
 
 
@@ -509,7 +541,7 @@ COPY users (userid, username, makerpassuuid, avatar_url, useremail, password) FR
 -- Name: users_userid_seq; Type: SEQUENCE SET; Schema: public; Owner: kimberlykost
 --
 
-SELECT pg_catalog.setval('users_userid_seq', 24, true);
+SELECT pg_catalog.setval('users_userid_seq', 43, true);
 
 
 --
@@ -658,8 +690,8 @@ SET default_transaction_read_only = off;
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.0
--- Dumped by pg_dump version 9.5.0
+-- Dumped from database version 9.5.1
+-- Dumped by pg_dump version 9.5.1
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;

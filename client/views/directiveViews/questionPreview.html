@@ -1,5 +1,6 @@
 <div ng-click="goToQuestion(question)">
   <h6>{{question.questiontitle}}</h6>
 </div>
-<p>{{question.questiontext}}</p>
+<div ng-bind-html="question.questiontext"></div>
+<p>{{question.username}} at <span am-time-ago="question.questiondate"></span></p>
 <br>

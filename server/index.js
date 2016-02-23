@@ -18,7 +18,11 @@ var knex = require('knex')({
 });
 
 var routes = express.Router();
+<<<<<<< HEAD
+// routes.use(morgan('dev'));
+=======
 //routes.use(morgan('dev'));
+>>>>>>> b642c6b1719c79be15b64fdb7c2c79ad4a949cb2
 
 
 // First set up sessions (independent of MakerPass and OAuth)
@@ -71,6 +75,18 @@ var routes = express.Router();
 //
 // passport.serializeUser(function(_, done) { done(null, 1) })
 
+<<<<<<< HEAD
+// //
+// // Direct your browser to this route to start the OAuth dance
+// //
+// routes.get('/auth/makerpass',
+//   passport.authenticate('makerpass'));
+
+// //
+// // During the OAuth dance, MakerPass will redirect your user to this route,
+// // of which passport will mostly handle.
+// //
+=======
 //
 // Direct your browser to this route to start the OAuth dance
 //
@@ -82,6 +98,7 @@ var routes = express.Router();
 // During the OAuth dance, MakerPass will redirect your user to this route,
 // of which passport will mostly handle.
 //
+>>>>>>> b642c6b1719c79be15b64fdb7c2c79ad4a949cb2
 
 // routes.get('/auth/makerpass/callback',
 //   passport.authenticate('makerpass', { failureRedirect: '/#/login',
@@ -105,6 +122,12 @@ var assetFolder = Path.resolve(__dirname, '../client/');
 routes.get('/api/questions', function(req, res) {
   console.log("Getting all questions");
   // Order in reverse (newest first)
+<<<<<<< HEAD
+  knex.from('questions').innerJoin('users', 'questions.fk_askedbyuserid', 'users.userid').orderBy('questiondate', 'desc')
+  // Pass data back to controller /src/main.js
+  .then(function(data) {
+    res.send({questions: data})
+=======
   knex('questions').select().orderBy('questiondate', 'desc')
   .then(function(questions) {
     // Pass data back to controller /src/main.js
@@ -113,12 +136,22 @@ routes.get('/api/questions', function(req, res) {
   .catch(function(err) {
     console.log("Error", err)
     res.redirect('/auth/makerpass')
+>>>>>>> b642c6b1719c79be15b64fdb7c2c79ad4a949cb2
   })
 });
 
 // Get single question from DB
 routes.get('/api/questions/*', function(req, res) {
   console.log("Let's take a closer look at question ", req.params[0]);
+<<<<<<< HEAD
+
+  knex.select('*').from('users').innerJoin('questions', 'questions.fk_askedbyuserid', 'users.userid').where({questionid: req.params[0]})
+  // Then, query answers table on condition the questionid in answer matches parameter, and the subquery
+  // knex('questions').where({questionid: req.params[0]}, subquery)
+  .then(function(data) {
+    console.log("Is this what I want??", data);
+    res.send({singleQuestion: data})
+=======
   knex('questions').where({questionid: req.params[0]})
   .then(function(singleQuest) {
     // Send back question data to controller /src/question.js
@@ -128,7 +161,17 @@ routes.get('/api/questions/*', function(req, res) {
   })
   .catch(function(err) {
     console.log("Something went wrong", err);
+>>>>>>> b642c6b1719c79be15b64fdb7c2c79ad4a949cb2
   })
+
+  // knex('questions').where({questionid: req.params[0]})
+  // .then(function(singleQuest) {
+  //   // Send back question data to controller /src/question.js
+  //   res.send({singleQuestion: singleQuest});
+  // })
+  // .catch(function(err) {
+  //   console.log("Something went wrong", err);
+  // })
 });
 
 // Post a question into DB
@@ -136,12 +179,13 @@ routes.post('/api/questions', function(req, res) {
   // Get data from req body
   console.log("You are asking a question. Good for you.");
   // Insert that data into DB
-  knex('questions').insert({questiontitle: req.body.title, questiontext: req.body.text, questiondate: req.body.time})
+  knex('questions').insert({questiontitle: req.body.title, questiontext: req.body.text, questiondate: req.body.time, fk_askedbyuserid: req.body.fkaskedby})
     // query db to get questionid of the question we just asked with date
   .then(function(resp) {
     knex('questions').where({questiondate: req.body.time}).select('questionid')
     // After query DB, take data and send back to controller /src/submit.js
     .then(function(questid) {
+      console.log('questid', questid)
       res.send({questid: questid[0].questionid});
       knex('questions').insert({questiontitle: req.body.title, questiontext: req.body.text})
         .then(function(resp) {
@@ -165,7 +209,7 @@ routes.post('/api/questions', function(req, res) {
 // Post an answer into DB
 routes.post('/api/answer', function(req, res) {
   console.log("You are developing others. Way to go!");
-  knex('answers').insert({answertext: req.body.text, fk_questionid: req.body.id, answerdate: req.body.time})
+  knex('answers').insert({answertext: req.body.text, fk_questionid: req.body.id, answerdate: req.body.time, fk_answeredbyuserid: req.body.fkansweredby})
   .then(function(resp) {
     // After query to DB, end response to fufill promise
     console.log("Should insert answer");
@@ -177,10 +221,11 @@ routes.post('/api/answer', function(req, res) {
 routes.get('/api/getAnswers/*', function(req, res) {
   // Query DB for answers
   console.log("Getting answers to increase your knowledge");
+  knex.select('*').from('users').innerJoin('answers', 'answers.fk_answeredbyuserid', 'users.userid').where({fk_questionid: req.params[0]})
   // First do a left outer join to get answers/users that match on userid
-  var subquery = knex.select('*').from('answers').leftOuterJoin('users', 'answers.fk_answeredbyuserid', 'users.userid');
+  // var subquery = knex.select('*').from('answers').leftOuterJoin('users', 'answers.fk_answeredbyuserid', 'users.userid');
   // Then, query answers table on condition the questionid in answer matches parameter, and the subquery
-  knex('answers').where({fk_questionid: req.params[0]}, subquery)
+  // knex('answers').where({fk_questionid: req.params[0]}, subquery)
   .then(function(data) {
     // Send data back to controller: /src/services/question.js
     res.send(data);
@@ -201,6 +246,15 @@ routes.get('/logout', function(req, res) {
 
 
 
+////////// AUTH ROUTES //////////
+routes.get('/logout', function (req, res) {
+  req.session = null;
+  res.redirect('/login')
+})
+
+
+
+
 if (process.env.NODE_ENV !== 'test') {
 //The following GET request now works but only if the catch-all 
 //route is commented out as well as routes.use below the assetFolder
@@ -217,11 +271,16 @@ if (process.env.NODE_ENV !== 'test') {
   // We're in development or production mode;
   // create and run a real server.
   var app = express();
+<<<<<<< HEAD
+  require('./config/middleware.js')(app, express);
+  module.exports = app;
+=======
   // configure our server with all the middleware and and routing
 require('./config/middleware.js')(app, express);
 
 // export our app for testing and flexibility, required by index.js
 module.exports = app;
+>>>>>>> b642c6b1719c79be15b64fdb7c2c79ad4a949cb2
 
   // Parse incoming request bodies as JSON
   app.use( require('body-parser').json() );

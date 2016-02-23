@@ -29,6 +29,7 @@ angular.module('myApp')
 
      // Bind id from selected question to cookies
      $scope.setSelected = function (idSelectedQuestion) {
+      console.log('triggered setSelected', idSelectedQuestion);
       $cookieStore.put('qid', idSelectedQuestion);
       // Change to single question page
       $state.go('question'); // states described in /views/app.js

@@ -1,3 +1,23 @@
+<<<<<<< HEAD
+var morgan = require('morgan');
+var bodyParser = require('body-parser');
+var helpers = require('./helpers.js');
+
+module.exports = function(app, express) {
+	var userRouter = express.Router();
+
+	app.use(morgan('dev'));
+	app.use(bodyParser.urlencoded({extended: true}));
+	app.use(bodyParser.json());
+
+	app.use('/api/users', userRouter);
+
+	app.use(helpers.errorLogger);
+	app.use(helpers.errorHandler);
+
+	require('../users/userRoutes.js')(userRouter);
+};
+=======
 var morgan      = require('morgan'), // used for logging incoming request
     bodyParser  = require('body-parser'),
     helpers     = require('./helpers.js'); // our custom middleware
@@ -25,3 +45,4 @@ module.exports = function (app, express) {
   // inject our routers into their respective route files
   require('../users/userRoutes.js')(userRouter);
 };
+>>>>>>> b642c6b1719c79be15b64fdb7c2c79ad4a949cb2
