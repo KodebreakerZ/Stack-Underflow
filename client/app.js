@@ -21,9 +21,15 @@ angular.module('myApp', [
         })
 
         .state('signup', {
+<<<<<<< HEAD
           url: '/signup',
           templateUrl: 'views/signup.html',
           controller: 'AuthController'
+=======
+            url: '/signup',
+            templateUrl: 'views/signup.html',
+            controller: 'AuthController'
+>>>>>>> b642c6b1719c79be15b64fdb7c2c79ad4a949cb2
         })
 
         .state('home', {
@@ -60,8 +66,17 @@ angular.module('myApp', [
 
 })
 .factory('Authenticate', function ($window) {
+<<<<<<< HEAD
   var attach = {
     request: function(object) {
+=======
+  // this is an $httpInterceptor
+  // its job is to stop all out going request
+  // then look in local storage and find the user's token
+  // then add it to the header so the server can validate the request
+  var attach = {
+    request: function (object) {
+>>>>>>> b642c6b1719c79be15b64fdb7c2c79ad4a949cb2
       var jwt = $window.localStorage.getItem('com.underflow');
       if (jwt) {
         object.headers['x-access-token'] = jwt;
@@ -73,6 +88,7 @@ angular.module('myApp', [
   return attach;
 })
 .run(function ($rootScope, $state, Auth) {
+<<<<<<< HEAD
   // Everything is running, listening for change state and if the next state requires authentication.
 $rootScope.$on("$stateChangeStart", function(event, toState, toParams, fromState, fromParams){
   if (toState.authenticate && Auth.isAuth() === false) {
@@ -80,5 +96,24 @@ $rootScope.$on("$stateChangeStart", function(event, toState, toParams, fromState
     event.preventDefault();
     };
   })
+=======
+  // here inside the run phase of angular, our services and controllers
+  // have just been registered and our app is ready
+  // however, we want to make sure the user is authorized
+  // we listen for when angular is trying to change routes
+  // when it does change routes, we then look for the token in localstorage
+  // and send that token to the server to see if it is a real user or hasn't expired
+  // if it's not valid, we then redirect back to signin/signup
+   $rootScope.$on("$stateChangeStart", function(event, toState, toParams, fromState, fromParams){
+//   //this works but needs to check if the user is authenitcated along with if the next route
+//   //requires authentication.
+      if (toState.authenticate && Auth.isAuth() === false){
+        // User isn’t authenticated, redirect to login
+        $state.transitionTo("login");
+        event.preventDefault(); 
+      }
+    });
+
+>>>>>>> b642c6b1719c79be15b64fdb7c2c79ad4a949cb2
 });
 
