@@ -19,8 +19,12 @@ angular.module('myApp')
   	$scope.answers = undefined;
     //These will each be formatted based on directives/answer.js
 
+    $scope.htmlcontent = '';
+
     /////// Submit answers to DB (submitAnswer.js)
-    $scope.submitAnswer = function(text, user) {
+    $scope.submitAnswer = function(user) {
+      var text = $scope.htmlcontent;
+      console.log('submitting answer ', text, 'by user', user);
       /* Possibly change $scope.userInput to clear form, depending on Tim's toolbar */
       $scope.userInput = ' ';
       // Get questionid from cookie

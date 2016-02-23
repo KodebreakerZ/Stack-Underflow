@@ -119,7 +119,7 @@ routes.get('/api/questions/*', function(req, res) {
   // Then, query answers table on condition the questionid in answer matches parameter, and the subquery
   // knex('questions').where({questionid: req.params[0]}, subquery)
   .then(function(data) {
-    // console.log("Is this what I want??", data);
+    console.log("Is this what I want??", data);
     res.send({singleQuestion: data})
   })
 
@@ -144,6 +144,7 @@ routes.post('/api/questions', function(req, res) {
     knex('questions').where({questiondate: req.body.time}).select('questionid')
     // After query DB, take data and send back to controller /src/submit.js
     .then(function(questid) {
+      console.log('questid', questid)
       res.send({questid: questid[0].questionid});
     })
     .catch(function(err) {

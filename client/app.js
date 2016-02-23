@@ -5,7 +5,8 @@ angular.module('myApp', [
     'ui.router',
     'ngCookies',
     'infinite-scroll',
-    'angularMoment'
+    'angularMoment',
+    'textAngular'
   ])
 
     .config(function($stateProvider, $urlRouterProvider, $httpProvider) {

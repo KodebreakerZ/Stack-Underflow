@@ -1,0 +1,742 @@
+--
+-- PostgreSQL database cluster dump
+--
+
+SET default_transaction_read_only = off;
+
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+
+--
+-- Roles
+--
+
+CREATE ROLE "Moon";
+ALTER ROLE "Moon" WITH SUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS;
+CREATE ROLE kimberlykost;
+ALTER ROLE kimberlykost WITH SUPERUSER INHERIT CREATEROLE CREATEDB LOGIN REPLICATION BYPASSRLS;
+CREATE ROLE martajohnson;
+ALTER ROLE martajohnson WITH SUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS PASSWORD 'md568ba6e1f662e1de9a4881df1679e578b';
+CREATE ROLE moon;
+ALTER ROLE moon WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS PASSWORD 'md52845e568b63af37fe0f1dadde65df5d3';
+CREATE ROLE timothybooser;
+ALTER ROLE timothybooser WITH SUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS;
+
+
+
+
+
+
+--
+-- Database creation
+--
+
+CREATE DATABASE kimberlykost WITH TEMPLATE = template0 OWNER = kimberlykost;
+CREATE DATABASE stackdb_db WITH TEMPLATE = template0 OWNER = kimberlykost;
+REVOKE ALL ON DATABASE stackdb_db FROM PUBLIC;
+REVOKE ALL ON DATABASE stackdb_db FROM kimberlykost;
+GRANT ALL ON DATABASE stackdb_db TO kimberlykost;
+GRANT CONNECT,TEMPORARY ON DATABASE stackdb_db TO PUBLIC;
+GRANT ALL ON DATABASE stackdb_db TO moon;
+GRANT ALL ON DATABASE stackdb_db TO martajohnson;
+REVOKE ALL ON DATABASE template1 FROM PUBLIC;
+REVOKE ALL ON DATABASE template1 FROM kimberlykost;
+GRANT ALL ON DATABASE template1 TO kimberlykost;
+GRANT CONNECT ON DATABASE template1 TO PUBLIC;
+
+
+\connect kimberlykost
+
+SET default_transaction_read_only = off;
+
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.5.1
+-- Dumped by pg_dump version 9.5.1
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: kimberlykost
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM kimberlykost;
+GRANT ALL ON SCHEMA public TO kimberlykost;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
+\connect postgres
+
+SET default_transaction_read_only = off;
+
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.5.1
+-- Dumped by pg_dump version 9.5.1
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: postgres; Type: COMMENT; Schema: -; Owner: kimberlykost
+--
+
+COMMENT ON DATABASE postgres IS 'default administrative connection database';
+
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: kimberlykost
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM kimberlykost;
+GRANT ALL ON SCHEMA public TO kimberlykost;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
+\connect stackdb_db
+
+SET default_transaction_read_only = off;
+
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.5.1
+-- Dumped by pg_dump version 9.5.1
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET search_path = public, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: answerrating; Type: TABLE; Schema: public; Owner: kimberlykost
+--
+
+CREATE TABLE answerrating (
+    ratingid integer NOT NULL,
+    fk_answerid integer,
+    fk_votedbyuserid integer
+);
+
+
+ALTER TABLE answerrating OWNER TO kimberlykost;
+
+--
+-- Name: answerrating_ratingid_seq; Type: SEQUENCE; Schema: public; Owner: kimberlykost
+--
+
+CREATE SEQUENCE answerrating_ratingid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE answerrating_ratingid_seq OWNER TO kimberlykost;
+
+--
+-- Name: answerrating_ratingid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: kimberlykost
+--
+
+ALTER SEQUENCE answerrating_ratingid_seq OWNED BY answerrating.ratingid;
+
+
+--
+-- Name: answers; Type: TABLE; Schema: public; Owner: kimberlykost
+--
+
+CREATE TABLE answers (
+    answerid integer NOT NULL,
+    answertext text,
+    fk_questionid integer,
+    fk_answeredbyuserid integer,
+    answerdate timestamp with time zone
+);
+
+
+ALTER TABLE answers OWNER TO kimberlykost;
+
+--
+-- Name: answers_answerid_seq; Type: SEQUENCE; Schema: public; Owner: kimberlykost
+--
+
+CREATE SEQUENCE answers_answerid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE answers_answerid_seq OWNER TO kimberlykost;
+
+--
+-- Name: answers_answerid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: kimberlykost
+--
+
+ALTER SEQUENCE answers_answerid_seq OWNED BY answers.answerid;
+
+
+--
+-- Name: knex_migrations; Type: TABLE; Schema: public; Owner: kimberlykost
+--
+
+CREATE TABLE knex_migrations (
+    id integer NOT NULL,
+    name character varying(255),
+    batch integer,
+    migration_time timestamp with time zone
+);
+
+
+ALTER TABLE knex_migrations OWNER TO kimberlykost;
+
+--
+-- Name: knex_migrations_id_seq; Type: SEQUENCE; Schema: public; Owner: kimberlykost
+--
+
+CREATE SEQUENCE knex_migrations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE knex_migrations_id_seq OWNER TO kimberlykost;
+
+--
+-- Name: knex_migrations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: kimberlykost
+--
+
+ALTER SEQUENCE knex_migrations_id_seq OWNED BY knex_migrations.id;
+
+
+--
+-- Name: knex_migrations_lock; Type: TABLE; Schema: public; Owner: kimberlykost
+--
+
+CREATE TABLE knex_migrations_lock (
+    is_locked integer
+);
+
+
+ALTER TABLE knex_migrations_lock OWNER TO kimberlykost;
+
+--
+-- Name: questions; Type: TABLE; Schema: public; Owner: kimberlykost
+--
+
+CREATE TABLE questions (
+    questionid integer NOT NULL,
+    questiontitle character varying(255),
+    questiontext character varying(255),
+    fk_askedbyuserid integer,
+    questiondate timestamp with time zone
+);
+
+
+ALTER TABLE questions OWNER TO kimberlykost;
+
+--
+-- Name: questions_questionid_seq; Type: SEQUENCE; Schema: public; Owner: kimberlykost
+--
+
+CREATE SEQUENCE questions_questionid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE questions_questionid_seq OWNER TO kimberlykost;
+
+--
+-- Name: questions_questionid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: kimberlykost
+--
+
+ALTER SEQUENCE questions_questionid_seq OWNED BY questions.questionid;
+
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: kimberlykost
+--
+
+CREATE TABLE users (
+    userid integer NOT NULL,
+    username character varying(255),
+    makerpassuuid character varying(255),
+    avatar_url character varying(75),
+    useremail character varying(100),
+    password character varying(20)
+);
+
+
+ALTER TABLE users OWNER TO kimberlykost;
+
+--
+-- Name: users_userid_seq; Type: SEQUENCE; Schema: public; Owner: kimberlykost
+--
+
+CREATE SEQUENCE users_userid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE users_userid_seq OWNER TO kimberlykost;
+
+--
+-- Name: users_userid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: kimberlykost
+--
+
+ALTER SEQUENCE users_userid_seq OWNED BY users.userid;
+
+
+--
+-- Name: ratingid; Type: DEFAULT; Schema: public; Owner: kimberlykost
+--
+
+ALTER TABLE ONLY answerrating ALTER COLUMN ratingid SET DEFAULT nextval('answerrating_ratingid_seq'::regclass);
+
+
+--
+-- Name: answerid; Type: DEFAULT; Schema: public; Owner: kimberlykost
+--
+
+ALTER TABLE ONLY answers ALTER COLUMN answerid SET DEFAULT nextval('answers_answerid_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: kimberlykost
+--
+
+ALTER TABLE ONLY knex_migrations ALTER COLUMN id SET DEFAULT nextval('knex_migrations_id_seq'::regclass);
+
+
+--
+-- Name: questionid; Type: DEFAULT; Schema: public; Owner: kimberlykost
+--
+
+ALTER TABLE ONLY questions ALTER COLUMN questionid SET DEFAULT nextval('questions_questionid_seq'::regclass);
+
+
+--
+-- Name: userid; Type: DEFAULT; Schema: public; Owner: kimberlykost
+--
+
+ALTER TABLE ONLY users ALTER COLUMN userid SET DEFAULT nextval('users_userid_seq'::regclass);
+
+
+--
+-- Data for Name: answerrating; Type: TABLE DATA; Schema: public; Owner: kimberlykost
+--
+
+COPY answerrating (ratingid, fk_answerid, fk_votedbyuserid) FROM stdin;
+\.
+
+
+--
+-- Name: answerrating_ratingid_seq; Type: SEQUENCE SET; Schema: public; Owner: kimberlykost
+--
+
+SELECT pg_catalog.setval('answerrating_ratingid_seq', 1, false);
+
+
+--
+-- Data for Name: answers; Type: TABLE DATA; Schema: public; Owner: kimberlykost
+--
+
+COPY answers (answerid, answertext, fk_questionid, fk_answeredbyuserid, answerdate) FROM stdin;
+69	Gilbert.	118	41	2016-02-22 14:43:14.733-06
+70	You can't.	118	42	2016-02-22 14:43:51.703-06
+71	Life hates you.	117	43	2016-02-22 14:46:20.117-06
+72	Nope.	119	42	2016-02-22 14:46:38.885-06
+73	What are the weird symbols next to it?	128	42	2016-02-22 14:49:54.798-06
+74	You can't. Sorry.	127	40	2016-02-22 15:05:08.436-06
+75	Google.	131	40	2016-02-22 15:07:38.344-06
+108	answerrrr	133	40	2016-02-22 15:35:33.523-06
+109	 	133	40	2016-02-22 15:43:14.361-06
+110	{"$error":{},"$name":"userInput","$dirty":true,"$pristine":false,"$valid":true,"$invalid":false,"$submitted":false,"qTitle":{"$viewValue":"<p>attempt</p>","$modelValue":"<p>attempt</p>","$validators":{},"$asyncValidators":{},"$parsers":[],"$formatters":[],"$viewChangeListeners":[],"$untouched":false,"$touched":true,"$pristine":false,"$dirty":true,"$valid":true,"$invalid":false,"$error":{},"$name":"qTitle","$options":null}}	133	40	2016-02-22 15:45:59.501-06
+111	{"$error":{},"$name":"userInput","$dirty":true,"$pristine":false,"$valid":true,"$invalid":false,"$submitted":false,"qTitle":{"$viewValue":"<p>hi</p>","$modelValue":"<p>hi</p>","$validators":{},"$asyncValidators":{},"$parsers":[],"$formatters":[],"$viewChangeListeners":[],"$untouched":false,"$touched":true,"$pristine":false,"$dirty":true,"$valid":true,"$invalid":false,"$error":{},"$name":"qTitle","$options":null}}	133	40	2016-02-22 15:59:29.637-06
+112	{"$error":{},"$name":"userInput","$dirty":true,"$pristine":false,"$valid":true,"$invalid":false,"$submitted":false,"qTitle":{"$viewValue":"<p>ok</p>","$modelValue":"<p>ok</p>","$validators":{},"$asyncValidators":{},"$parsers":[],"$formatters":[],"$viewChangeListeners":[],"$untouched":false,"$touched":true,"$pristine":false,"$dirty":true,"$valid":true,"$invalid":false,"$error":{},"$name":"qTitle","$options":null}}	133	40	2016-02-22 16:00:43.178-06
+113	{"$error":{},"$name":"userInput","$dirty":true,"$pristine":false,"$valid":true,"$invalid":false,"$submitted":false,"qTitle":{"$viewValue":"<p>ok</p>","$modelValue":"<p>ok</p>","$validators":{},"$asyncValidators":{},"$parsers":[],"$formatters":[],"$viewChangeListeners":[],"$untouched":false,"$touched":true,"$pristine":false,"$dirty":true,"$valid":true,"$invalid":false,"$error":{},"$name":"qTitle","$options":null}}	133	40	2016-02-22 16:03:17.368-06
+114	{"$error":{},"$name":"userInput","$dirty":true,"$pristine":false,"$valid":true,"$invalid":false,"$submitted":false,"qTitle":{"$viewValue":"<p>ok</p>","$modelValue":"<p>ok</p>","$validators":{},"$asyncValidators":{},"$parsers":[],"$formatters":[],"$viewChangeListeners":[],"$untouched":false,"$touched":true,"$pristine":false,"$dirty":true,"$valid":true,"$invalid":false,"$error":{},"$name":"qTitle","$options":null}}	133	40	2016-02-22 16:04:38.958-06
+115	<p>trying</p>	133	40	2016-02-22 16:05:54.561-06
+116	<p>hi<i><span>hi</span></i></p>	133	40	2016-02-22 16:13:26.952-06
+117	<p>sup</p>	141	40	2016-02-22 16:41:45.709-06
+118	<p>hey ye</p>	141	40	2016-02-22 16:48:24.091-06
+\.
+
+
+--
+-- Name: answers_answerid_seq; Type: SEQUENCE SET; Schema: public; Owner: kimberlykost
+--
+
+SELECT pg_catalog.setval('answers_answerid_seq', 118, true);
+
+
+--
+-- Data for Name: knex_migrations; Type: TABLE DATA; Schema: public; Owner: kimberlykost
+--
+
+COPY knex_migrations (id, name, batch, migration_time) FROM stdin;
+1	20160219123025_stackdb.js	1	2016-02-19 12:44:02.058-06
+\.
+
+
+--
+-- Name: knex_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: kimberlykost
+--
+
+SELECT pg_catalog.setval('knex_migrations_id_seq', 1, true);
+
+
+--
+-- Data for Name: knex_migrations_lock; Type: TABLE DATA; Schema: public; Owner: kimberlykost
+--
+
+COPY knex_migrations_lock (is_locked) FROM stdin;
+0
+\.
+
+
+--
+-- Data for Name: questions; Type: TABLE DATA; Schema: public; Owner: kimberlykost
+--
+
+COPY questions (questionid, questiontitle, questiontext, fk_askedbyuserid, questiondate) FROM stdin;
+117	WHY?!	This is an example question...	40	2016-02-22 14:42:03.866-06
+118	How do I code good?	Please?	40	2016-02-22 14:42:15.246-06
+119	How do I Postgres?	How do you use with GitHub? What about merge conflicts? How do I even being to even?	41	2016-02-22 14:42:57.259-06
+120	How do I toolbar?	... yeah ...	42	2016-02-22 14:43:42.079-06
+121	How can I tell if it's racist?	Ask the group.\nAt your own risk.	41	2016-02-22 14:44:21.015-06
+122	How does Makerpass work?	Why couldn't we figure it out? :(	41	2016-02-22 14:44:47.502-06
+123	Git Flags	What is the difference between all the different git flags? -a, . , etc.	43	2016-02-22 14:45:34.113-06
+124	nQueens	How many boards can YOUR computer solve?	43	2016-02-22 14:46:12.479-06
+125	Angular difficulty	Why are things so hard to use with Angular?!	42	2016-02-22 14:46:57.241-06
+126	Knex	How can I make complicated queries to the database through Knex?	42	2016-02-22 14:47:28.904-06
+127	Gilbert Mastery	How do I get to be a wizard like Gilbert?	41	2016-02-22 14:48:09.817-06
+128	What is an HTML tag?	How do I use this thing called an html tag?	42	2016-02-22 14:49:13.138-06
+129	Twittler	How do I twittler so gud?	42	2016-02-22 14:49:22.447-06
+130	Frameworks	Which is the best framework to use with a single-page app?	41	2016-02-22 14:51:04.538-06
+131	How to React	What is the best resource to look at when starting at with React?	41	2016-02-22 14:51:21.005-06
+132	why is this not working	please please work	40	2016-02-22 15:31:30.438-06
+133	isthis still working	come on	40	2016-02-22 15:32:51.724-06
+134	What is going on here?	<p>i dunno</p>	\N	2016-02-22 15:47:15.659-06
+135	hi	<p>sup</p>	\N	2016-02-22 15:48:23.822-06
+136	what	<p>up</p>	\N	2016-02-22 15:49:24.892-06
+137	test	<p>again</p>	\N	2016-02-22 15:50:46.585-06
+138	hello again	<p>this is the worst</p>	\N	2016-02-22 16:14:28.052-06
+139	hello again	<p>this is the worst</p>	\N	2016-02-22 16:24:04.603-06
+140	testingagin	<p>uid should still be 40</p>	40	2016-02-22 16:32:28.821-06
+141	test	<p>please work</p>	40	2016-02-22 16:35:20.691-06
+142	sup	<p>ask</p>	40	2016-02-22 16:49:07.296-06
+143	test 2	<p>yay</p>	40	2016-02-22 16:50:20.222-06
+144	test3	<p>why</p>	40	2016-02-22 16:58:19.231-06
+\.
+
+
+--
+-- Name: questions_questionid_seq; Type: SEQUENCE SET; Schema: public; Owner: kimberlykost
+--
+
+SELECT pg_catalog.setval('questions_questionid_seq', 144, true);
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: kimberlykost
+--
+
+COPY users (userid, username, makerpassuuid, avatar_url, useremail, password) FROM stdin;
+40	Kimberly	\N	\N	\N	pass
+41	Andrew	\N	\N	\N	pass
+42	Tim	\N	\N	\N	pass
+43	Marta	\N	\N	\N	pass
+\.
+
+
+--
+-- Name: users_userid_seq; Type: SEQUENCE SET; Schema: public; Owner: kimberlykost
+--
+
+SELECT pg_catalog.setval('users_userid_seq', 43, true);
+
+
+--
+-- Name: answerrating_pkey; Type: CONSTRAINT; Schema: public; Owner: kimberlykost
+--
+
+ALTER TABLE ONLY answerrating
+    ADD CONSTRAINT answerrating_pkey PRIMARY KEY (ratingid);
+
+
+--
+-- Name: answers_pkey; Type: CONSTRAINT; Schema: public; Owner: kimberlykost
+--
+
+ALTER TABLE ONLY answers
+    ADD CONSTRAINT answers_pkey PRIMARY KEY (answerid);
+
+
+--
+-- Name: knex_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: kimberlykost
+--
+
+ALTER TABLE ONLY knex_migrations
+    ADD CONSTRAINT knex_migrations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: questions_pkey; Type: CONSTRAINT; Schema: public; Owner: kimberlykost
+--
+
+ALTER TABLE ONLY questions
+    ADD CONSTRAINT questions_pkey PRIMARY KEY (questionid);
+
+
+--
+-- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: kimberlykost
+--
+
+ALTER TABLE ONLY users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (userid);
+
+
+--
+-- Name: answerrating_fk_answerid_foreign; Type: FK CONSTRAINT; Schema: public; Owner: kimberlykost
+--
+
+ALTER TABLE ONLY answerrating
+    ADD CONSTRAINT answerrating_fk_answerid_foreign FOREIGN KEY (fk_answerid) REFERENCES answers(answerid);
+
+
+--
+-- Name: answerrating_fk_votedbyuserid_foreign; Type: FK CONSTRAINT; Schema: public; Owner: kimberlykost
+--
+
+ALTER TABLE ONLY answerrating
+    ADD CONSTRAINT answerrating_fk_votedbyuserid_foreign FOREIGN KEY (fk_votedbyuserid) REFERENCES users(userid);
+
+
+--
+-- Name: answers_fk_answeredbyuserid_foreign; Type: FK CONSTRAINT; Schema: public; Owner: kimberlykost
+--
+
+ALTER TABLE ONLY answers
+    ADD CONSTRAINT answers_fk_answeredbyuserid_foreign FOREIGN KEY (fk_answeredbyuserid) REFERENCES users(userid);
+
+
+--
+-- Name: answers_fk_questionid_foreign; Type: FK CONSTRAINT; Schema: public; Owner: kimberlykost
+--
+
+ALTER TABLE ONLY answers
+    ADD CONSTRAINT answers_fk_questionid_foreign FOREIGN KEY (fk_questionid) REFERENCES questions(questionid);
+
+
+--
+-- Name: questions_fk_askedbyuserid_foreign; Type: FK CONSTRAINT; Schema: public; Owner: kimberlykost
+--
+
+ALTER TABLE ONLY questions
+    ADD CONSTRAINT questions_fk_askedbyuserid_foreign FOREIGN KEY (fk_askedbyuserid) REFERENCES users(userid);
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: kimberlykost
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM kimberlykost;
+GRANT ALL ON SCHEMA public TO kimberlykost;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- Name: answerrating; Type: ACL; Schema: public; Owner: kimberlykost
+--
+
+REVOKE ALL ON TABLE answerrating FROM PUBLIC;
+REVOKE ALL ON TABLE answerrating FROM kimberlykost;
+GRANT ALL ON TABLE answerrating TO kimberlykost;
+GRANT ALL ON TABLE answerrating TO martajohnson;
+GRANT ALL ON TABLE answerrating TO moon;
+
+
+--
+-- Name: answers; Type: ACL; Schema: public; Owner: kimberlykost
+--
+
+REVOKE ALL ON TABLE answers FROM PUBLIC;
+REVOKE ALL ON TABLE answers FROM kimberlykost;
+GRANT ALL ON TABLE answers TO kimberlykost;
+GRANT ALL ON TABLE answers TO martajohnson;
+GRANT ALL ON TABLE answers TO moon;
+
+
+--
+-- Name: questions; Type: ACL; Schema: public; Owner: kimberlykost
+--
+
+REVOKE ALL ON TABLE questions FROM PUBLIC;
+REVOKE ALL ON TABLE questions FROM kimberlykost;
+GRANT ALL ON TABLE questions TO kimberlykost;
+GRANT ALL ON TABLE questions TO martajohnson;
+GRANT ALL ON TABLE questions TO moon;
+
+
+--
+-- Name: users; Type: ACL; Schema: public; Owner: kimberlykost
+--
+
+REVOKE ALL ON TABLE users FROM PUBLIC;
+REVOKE ALL ON TABLE users FROM kimberlykost;
+GRANT ALL ON TABLE users TO kimberlykost;
+GRANT ALL ON TABLE users TO martajohnson;
+GRANT ALL ON TABLE users TO moon;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
+\connect template1
+
+SET default_transaction_read_only = off;
+
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.5.1
+-- Dumped by pg_dump version 9.5.1
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: template1; Type: COMMENT; Schema: -; Owner: kimberlykost
+--
+
+COMMENT ON DATABASE template1 IS 'default template for new databases';
+
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: kimberlykost
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM kimberlykost;
+GRANT ALL ON SCHEMA public TO kimberlykost;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
+--
+-- PostgreSQL database cluster dump complete
+--
+

@@ -5,7 +5,7 @@
 
   <div class="originalQuestion" ng-model="question">
     <h4 class="questionTitle">{{ question.questiontitle }}</h4>
-    <p>{{ question.questiontext }}</p>
+    <div ng-bind-html="question.questiontext"></div>
     <div>
       <span>Asked by {{ question.username }} at </span><span am-time-ago="question.questiondate"></span>
     </div>
@@ -31,7 +31,7 @@
         <suf-question-or-answer></suf-question-or-answer>
       </label>
       <!-- Get input text from form and questionid from question to insert into DB: src/question.js -->
-      <button ng-click="submitAnswer(userInput, question.questionid)">Submit Answer</button>
+      <button ng-click="submitAnswer(question.questionid)">Submit Answer</button>
     </form>
 
   </div>
