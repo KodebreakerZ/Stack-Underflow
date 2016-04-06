@@ -7,7 +7,7 @@ angular.module('myApp')
         // Pass along get req to db: /server/index.js
     	return $http({
     		method: 'GET',
-    		url: '/api/questions'
+    		url: '/api/data/questions'
     	})
     };
 

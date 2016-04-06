@@ -18,6 +18,7 @@ angular.module('myApp')
         // get current date and convert to more legible timestamp
         var timestamp = (Date.now());
         var currentDate = new Date(timestamp);
+<<<<<<< HEAD
         var user = $cookieStore.get('uid');
         // console.log("Here is our user", user);
         var data = {title: title, text: text, time: currentDate, fkaskedby: user};
@@ -26,6 +27,15 @@ angular.module('myApp')
         .success(function(resp, status) {
             console.log("Successfully asked a question - id is is", resp.questid);
             $http.get('/api/questions/' + resp.questid)
+=======
+        // Take data from form, convert to object, send with post req to db
+        var data = {title: title, text: text, time: currentDate};
+        $http.post("/api/data/questions", data)
+        .success(function(resp, status) {
+            // console.log("Cookie should not have changed, have to use resp", resp.questid);
+            // Cookies act weird on routes, set params instead => Send questid along with get request to DB to get question just asked
+            $http.get('/api/data/questions/' + resp.questid)
+>>>>>>> 7cb4a878e0a79701ddc90aa758164a940dc83107
             .success(function(resp, status) {
                 console.log("Redirecting with id ", resp.singleQuestion[0].questionid);
                 $cookieStore.put('qid', resp.singleQuestion[0].questionid);
