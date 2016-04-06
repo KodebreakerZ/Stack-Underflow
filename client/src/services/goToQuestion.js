@@ -7,7 +7,7 @@ angular.module('myApp')
     	$cookieStore.put('qid', questID);
 
         // Query DB for question, send questionid as param (cookies don't mix well with routes)
-        return $http.get('/api/questions/' + questID);
+        return $http.get('/api/data/questions/' + questID);
     }
 
 

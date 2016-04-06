@@ -7,7 +7,7 @@ angular.module('myApp')
       // Send get req to DB, use params
       return $http({
         method: 'GET',
-        url: '/api/getAnswers/' + question,
+        url: '/api/data/getAnswers/' + question,
         params: ({questionID: question})
       })
 
