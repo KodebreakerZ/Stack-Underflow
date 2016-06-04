@@ -3,14 +3,15 @@ var Path = require('path');
 var sass = require('node-sass-endpoint');
 var db  = require('./db');
 
+console.log('-----------------------------------------databaseURL----------------------', process.env.DATABASE_URL);
 
 // need to require knex to use the functions for DB
-var knex = require('knex')({
-  client: 'pg',
-  connection: {
-    database: 'stackdb_db'
-  }
-});
+// var knex = require('knex')({
+//   client: 'pg',
+//   connection: {
+//     database: 'stackdb_db'
+//   }
+// });
 
 var routes = express.Router();
 

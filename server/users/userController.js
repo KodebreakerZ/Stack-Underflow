@@ -1,11 +1,11 @@
 var jwt  = require('jwt-simple'),
     express = require('express');
-    knex = require('knex')({
-  client: 'pg',
-  connection: {
-    database: 'stackdb_db'
-  }
-});
+//     knex = require('knex')({
+//   client: 'pg',
+//   connection: {
+//     database: 'stackdb_db'
+//   }
+// });
 
 module.exports = {
   signin: function (req, res, next) {

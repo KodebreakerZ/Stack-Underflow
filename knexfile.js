@@ -5,5 +5,10 @@ module.exports = {
     connection: {
       database: 'stackdb_db'
     }
+  },
+
+  production: {
+    client: 'postgresql',
+    connection: process.env.DATABASE_URL
   }
 }

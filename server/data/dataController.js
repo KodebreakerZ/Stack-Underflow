@@ -1,10 +1,10 @@
-var express = require('express'),
-    knex = require('knex')({
-		  client: 'pg',
-		  connection: {
-		    database: 'stackdb_db'
-		  }
-		});
+var express = require('express')//,
+  //   knex = require('knex')({
+		//   client: 'pg',
+		//   connection: {
+		//     database: process.env.DATABASE_URL || 'stackdb_db'
+		//   }
+		// });
 
 module.exports = {
 
