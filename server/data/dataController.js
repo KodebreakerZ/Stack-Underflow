@@ -1,15 +1,14 @@
-var express = require('express'),
-    knex = require('knex')({
-		  client: 'pg',
-		  connection: {
-		    database: 'stackdb_db'
-		  }
-		});
+var express = require('express')//,
+  //   knex = require('knex')({
+		//   client: 'pg',
+		//   connection: {
+		//     database: process.env.DATABASE_URL || 'stackdb_db'
+		//   }
+		// });
 
 module.exports = {
 
 	getAll: function(req, res) {
-	  // console.log("Getting all questions");
 	  // Order in reverse (newest first)
 	  knex('questions').select().orderBy('questiondate', 'desc')
 	  .then(function(questions) {
@@ -23,7 +22,6 @@ module.exports = {
 	},
 
 	getOne: function(req, res) {
-	  // console.log("Let's take a closer look at question ", req.params[0]);
 	  knex('questions').where({questionid: req.params[0]})
 	  .then(function(singleQuest) {
 	    // Send back question data to controller /src/question.js
@@ -36,7 +34,6 @@ module.exports = {
 
 	postQuest: function(req, res) {
 	  // Get data from req body
-	  // console.log("You are asking a question. Good for you.");
 	  // Insert that data into DB
 	  knex('questions').insert({questiontitle: req.body.title, questiontext: req.body.text, questiondate: req.body.time})
 	    // query db to get questionid of the question we just asked with date
@@ -51,7 +48,6 @@ module.exports = {
 
 	getAnswer: function(req, res) {
 	  // Query DB for answers
-	  // console.log("Getting answers to increase your knowledge");
 	  // First do a left outer join to get answers/users that match on userid
 	  var subquery = knex.select('*').from('answers').leftOuterJoin('users', 'answers.fk_answeredbyuserid', 'users.userid');
 	  // Then, query answers table on condition the questionid in answer matches parameter, and the subquery
@@ -70,7 +66,6 @@ module.exports = {
 	  knex('answers').insert({answertext: req.body.text, fk_questionid: req.body.id, answerdate: req.body.time})
 	  .then(function(resp) {
 	    // After query to DB, end response to fufill promise
-	    // console.log("Should insert answer");
 	    res.end();
 	  })
 	}
